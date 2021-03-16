@@ -20,6 +20,11 @@ fun printFileInfo(file: File) {
             file.path = ${file.path}
             file.absolutePath = ${file.absolutePath}
             file.canonicalPath = ${file.canonicalPath}
+            
+            file.parent = ${file.parent}
+            file.parentFile = ${file.parentFile}
+            file.parentFile.name = ${file.parentFile.name}
+            file.parentFile.path = ${file.parentFile.path}
         """.trimIndent()
     )
 }
