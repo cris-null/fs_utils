@@ -16,24 +16,29 @@ fun printFileInfo(file: File) {
 }
 
 /**
- * @throws IllegalArgumentException when [file] does not exist
- * @throws IllegalArgumentException when [file] is a directory
- * @throws IllegalArgumentException when [file] does not have a parent directory
+ * @return All the directories at the same level, i.e., the children of the parent
+ * of [file], i.e., its siblings
+ * @throws IllegalArgumentException If [file] does not exist
+ * @throws IllegalArgumentException if [file] does not have a parent
  */
-fun printAdjacentDirs(file: File) {
+fun getAdjacentDirs(file: File): Array<File> {
     if (!file.exists()) throw IllegalArgumentException("File does not exist")
-    if (file.isDirectory) throw IllegalArgumentException("File cannot be a directory")
 
-    val parentPathname = file.parent
-    val parent = File(parentPathname)
-    if (!parent.isDirectory) throw IllegalArgumentException("File does not have a parent directory")
+    val parent = file.parentFile
+    if (!parent.exists()) throw IllegalArgumentException("File does not have a parent directory")
 
     val children = parent.listFiles()
     val adjacentDirs = mutableListOf<File>()
     children.forEach {
-        if(it.isDirectory) adjacentDirs.add(it)
+        if( it.isDirectory && it.name != file.name)
+            adjacentDirs.add(it)
     }
 
+    return adjacentDirs.toTypedArray()
+}
+
+fun printAdjacentDirs(file: File) {
+    val adjacentDirs = getAdjacentDirs(file)
     println("Total adjacent dirs = ${adjacentDirs.size}")
     adjacentDirs.forEach { println(it.name) }
 }

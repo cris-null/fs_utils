@@ -8,5 +8,7 @@ fun parse(args: Array<String>) {
         printFileInfo(File(args[1]))
     } else if (command == "copy" && args.size == 3) {
         copyFileToDir(File(args[1]), File(args[2]))
+    } else if (command == "print-adjacent-dirs" && args.size == 2) {
+        printAdjacentDirs(File(args[1]))
     }
 }
