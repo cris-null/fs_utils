@@ -10,5 +10,7 @@ fun parse(args: Array<String>) {
         copyFileToDir(File(args[1]), File(args[2]))
     } else if (command == "print-adjacent-dirs" && args.size == 2) {
         printAdjacentDirs(File(args[1]))
+    } else if (command == "mass-copy" && args.size == 2) {
+        copyFileToAllAdjacentDirs(File(args[1]))
     }
 }

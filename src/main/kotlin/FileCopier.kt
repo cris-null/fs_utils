@@ -17,5 +17,5 @@ fun copyFileToDir(file: File, dir: File) {
 }
 
 fun copyFileToAllAdjacentDirs(file: File) {
-
+    getAdjacentDirs(file).forEach { copyFileToDir(file, it) }
 }
