@@ -1,4 +1,12 @@
+package file_utilites
+
 import java.io.File
+
+/**
+ * Used for functions that obtain information about a [File].
+ *
+ * Do not put functions that modify anything in here.
+ */
 
 fun printFileInfo(file: File) {
     println(
