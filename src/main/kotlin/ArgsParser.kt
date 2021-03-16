@@ -4,7 +4,10 @@ import java.io.File
 fun parse(args: Array<String>) {
     if (args.isEmpty()) return
 
-    val commands = arrayOf("info", "copy", "print-adj-dirs", "mass-copy", "verify", "adj-all-file-del")
+    val commands = arrayOf(
+        "info", "copy", "print-adj-dirs", "mass-copy", "verify", "adj-all-file-del",
+        "simplify-all"
+    )
 
     val chosenCommand = args[0]
     if (chosenCommand == commands[0] && args.size == 2)
@@ -19,4 +22,6 @@ fun parse(args: Array<String>) {
         println(isFileInAllAdjacentDirs(File(args[1])))
     else if (chosenCommand == commands[5] && args.size == 2)
         delFromAdjacentDirs(File(args[1]))
+    else if (chosenCommand == commands[6] && args.size == 2)
+        simplifyAllFilenames(File(args[1]))
 }
