@@ -9,6 +9,8 @@ fun printFileInfo(file: File) {
             
             file.name = ${file.name}
             file.path = ${file.path}
+            file.absolutePath = ${file.absolutePath}
+            file.canonicalPath = ${file.canonicalPath}
         """.trimIndent()
     )
 }
