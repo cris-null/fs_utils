@@ -67,6 +67,21 @@ fun isFileInDir(file: File, dir: File): Boolean {
 }
 
 /**
+ * Searches a directory for a [File] with the same name as [file], and returns it.
+ *
+ * @return The matching [File] if found, else null.
+ */
+fun getFileMatchFromDir(file: File, dir: File): File? {
+    if (!file.exists() || file.isDirectory) throw IllegalArgumentException("File does not exist, or it's a directory")
+    if (!dir.exists() || !dir.isDirectory) throw IllegalArgumentException("Dir does not exist, or it's not a directory")
+
+    val children = dir.listFiles()
+    children.forEach { if (it.name == file.name) return it }
+
+    return null
+}
+
+/**
  * Checks adjacent directories to see if they contain a file with the same name as [file]. If so, it is deleted.
  */
 fun delFromAdjacentDirs(file: File) {
@@ -82,11 +97,10 @@ fun delFromAdjacentDirs(file: File) {
 /**
  * Will only delete [file] if it exists in [dir].
  *
- * @return True if the file was deleted, false if it was not, or if it was not found in [dir].
+ * @return True if the file was deleted;
+ * false if it was not or it was not found in [dir]
  */
 fun delFileFromDir(file: File, dir: File): Boolean {
-    if (isFileInDir(file, dir))
-        return file.delete()
-    else
-        return false
+    val match = getFileMatchFromDir(file, dir) ?: return false
+    return match.delete()
 }
