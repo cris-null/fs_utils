@@ -3,14 +3,15 @@ import java.io.File
 fun parse(args: Array<String>) {
     if (args.isEmpty()) return
 
-    val command = args[0]
-    if (command == "info" && args.size == 2) {
+    val commands = arrayOf("info", "copy", "print-adjacent-dirs", "mass-copy", "verify")
+
+    val chosenCommand = args[0]
+    if (chosenCommand == commands[0] && args.size == 2)
         printFileInfo(File(args[1]))
-    } else if (command == "copy" && args.size == 3) {
+    else if (chosenCommand == commands[1] && args.size == 3)
         copyFileToDir(File(args[1]), File(args[2]))
-    } else if (command == "print-adjacent-dirs" && args.size == 2) {
+    else if (chosenCommand == commands[2] && args.size == 2)
         printAdjacentDirs(File(args[1]))
-    } else if (command == "mass-copy" && args.size == 2) {
+    else if (chosenCommand == commands[3] && args.size == 2)
         copyFileToAllAdjacentDirs(File(args[1]))
-    }
 }
