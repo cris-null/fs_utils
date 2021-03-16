@@ -1,4 +1,12 @@
+package file_utilites
+
 import java.io.File
+
+/**
+ * Used for functions that obtain information about a [File].
+ *
+ * Do not put functions that modify anything in here.
+ */
 
 fun printFileInfo(file: File) {
     println(
@@ -12,6 +20,11 @@ fun printFileInfo(file: File) {
             file.path = ${file.path}
             file.absolutePath = ${file.absolutePath}
             file.canonicalPath = ${file.canonicalPath}
+            
+            file.parent = ${file.parent}
+            file.parentFile = ${file.parentFile}
+            file.parentFile.name = ${file.parentFile.name}
+            file.parentFile.path = ${file.parentFile.path}
         """.trimIndent()
     )
 }
@@ -79,32 +92,4 @@ fun getFileMatchFromDir(file: File, dir: File): File? {
     children.forEach { if (it.name == file.name) return it }
 
     return null
-}
-
-/**
- * Checks adjacent directories to see if they contain a file with the same name as [file]. If so, it is deleted.
- */
-fun delFromAdjacentDirs(file: File) {
-    var filesDeleted = 0
-    val adjacentDirs = getAdjacentDirs(file)
-    adjacentDirs.forEach {
-        if (delFileFromDir(file, it)) {
-            println("Deleted ${file.name} in ${it.name}")
-            filesDeleted++
-        } else
-            println("Error deleting ${file.name} in ${it.name}")
-    }
-
-    println("Files deleted = $filesDeleted")
-}
-
-/**
- * Will only delete [file] if it exists in [dir].
- *
- * @return True if the file was deleted;
- * false if it was not or it was not found in [dir]
- */
-fun delFileFromDir(file: File, dir: File): Boolean {
-    val match = getFileMatchFromDir(file, dir) ?: return false
-    return match.delete()
 }
