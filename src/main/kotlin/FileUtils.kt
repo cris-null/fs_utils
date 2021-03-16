@@ -1,7 +1,8 @@
 import java.io.File
 
 fun printFileInfo(file: File) {
-    println("""           
+    println(
+        """           
             file.exists = ${file.exists()}
             file.isFile = ${file.isFile}
             file.isDirectory = ${file.isDirectory}
@@ -17,9 +18,9 @@ fun printFileInfo(file: File) {
 
 /**
  * @return All the directories at the same level, i.e., the children of the parent
- * of [file], i.e., its siblings
- * @throws IllegalArgumentException If [file] does not exist
- * @throws IllegalArgumentException if [file] does not have a parent
+ * of [file], i.e., its siblings.
+ * @throws IllegalArgumentException If [file] does not exist.
+ * @throws IllegalArgumentException if [file] does not have a parent.
  */
 fun getAdjacentDirs(file: File): Array<File> {
     if (!file.exists()) throw IllegalArgumentException("File does not exist")
@@ -30,7 +31,7 @@ fun getAdjacentDirs(file: File): Array<File> {
     val children = parent.listFiles()
     val adjacentDirs = mutableListOf<File>()
     children.forEach {
-        if( it.isDirectory && it.name != file.name)
+        if (it.isDirectory && it.name != file.name)
             adjacentDirs.add(it)
     }
 
@@ -52,10 +53,10 @@ fun isFileInAllAdjacentDirs(file: File): Boolean {
 }
 
 /**
- * @throws IllegalArgumentException If [file] does not exist, or if it's a directory
- * @throws IllegalArgumentException if [dir] does not exist, or if it's not a directory
+ * @throws IllegalArgumentException If [file] does not exist, or if it's a directory.
+ * @throws IllegalArgumentException if [dir] does not exist, or if it's not a directory.
  */
-fun isFileInDir(file: File, dir: File):Boolean {
+fun isFileInDir(file: File, dir: File): Boolean {
     if (!file.exists() || file.isDirectory) throw IllegalArgumentException("File does not exist, or it's a directory")
     if (!dir.exists() || !dir.isDirectory) throw IllegalArgumentException("Dir does not exist, or it's not a directory")
 
@@ -63,4 +64,47 @@ fun isFileInDir(file: File, dir: File):Boolean {
     children.forEach { if (it.name == file.name) return true }
 
     return false
+}
+
+/**
+ * Searches a directory for a [File] with the same name as [file], and returns it.
+ *
+ * @return The matching [File] if found, else null.
+ */
+fun getFileMatchFromDir(file: File, dir: File): File? {
+    if (!file.exists() || file.isDirectory) throw IllegalArgumentException("File does not exist, or it's a directory")
+    if (!dir.exists() || !dir.isDirectory) throw IllegalArgumentException("Dir does not exist, or it's not a directory")
+
+    val children = dir.listFiles()
+    children.forEach { if (it.name == file.name) return it }
+
+    return null
+}
+
+/**
+ * Checks adjacent directories to see if they contain a file with the same name as [file]. If so, it is deleted.
+ */
+fun delFromAdjacentDirs(file: File) {
+    var filesDeleted = 0
+    val adjacentDirs = getAdjacentDirs(file)
+    adjacentDirs.forEach {
+        if (delFileFromDir(file, it)) {
+            println("Deleted ${file.name} in ${it.name}")
+            filesDeleted++
+        } else
+            println("Error deleting ${file.name} in ${it.name}")
+    }
+
+    println("Files deleted = $filesDeleted")
+}
+
+/**
+ * Will only delete [file] if it exists in [dir].
+ *
+ * @return True if the file was deleted;
+ * false if it was not or it was not found in [dir]
+ */
+fun delFileFromDir(file: File, dir: File): Boolean {
+    val match = getFileMatchFromDir(file, dir) ?: return false
+    return match.delete()
 }
