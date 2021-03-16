@@ -3,7 +3,7 @@ import java.io.File
 fun parse(args: Array<String>) {
     if (args.isEmpty()) return
 
-    val commands = arrayOf("info", "copy", "print-adjacent-dirs", "mass-copy", "verify")
+    val commands = arrayOf("info", "copy", "print-adj-dirs", "mass-copy", "verify")
 
     val chosenCommand = args[0]
     if (chosenCommand == commands[0] && args.size == 2)
