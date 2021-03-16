@@ -42,3 +42,25 @@ fun printAdjacentDirs(file: File) {
     println("Total adjacent dirs = ${adjacentDirs.size}")
     adjacentDirs.forEach { println(it.name) }
 }
+
+fun isFileInAllAdjacentDirs(file: File): Boolean {
+    var copiesFound = 0
+    val adjacentDirs = getAdjacentDirs(file)
+    adjacentDirs.forEach { if (isFileInDir(file, it)) copiesFound++ }
+
+    return copiesFound == adjacentDirs.size
+}
+
+/**
+ * @throws IllegalArgumentException If [file] does not exist, or if it's a directory
+ * @throws IllegalArgumentException if [dir] does not exist, or if it's not a directory
+ */
+fun isFileInDir(file: File, dir: File):Boolean {
+    if (!file.exists() || file.isDirectory) throw IllegalArgumentException("File does not exist, or it's a directory")
+    if (!dir.exists() || !dir.isDirectory) throw IllegalArgumentException("Dir does not exist, or it's not a directory")
+
+    val children = dir.listFiles()
+    children.forEach { if (it.name == file.name) return true }
+
+    return false
+}
