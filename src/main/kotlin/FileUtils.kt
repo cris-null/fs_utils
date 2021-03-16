@@ -85,13 +85,17 @@ fun getFileMatchFromDir(file: File, dir: File): File? {
  * Checks adjacent directories to see if they contain a file with the same name as [file]. If so, it is deleted.
  */
 fun delFromAdjacentDirs(file: File) {
+    var filesDeleted = 0
     val adjacentDirs = getAdjacentDirs(file)
     adjacentDirs.forEach {
-        if (delFileFromDir(file, it))
-            println("Deleted file ${file.name} in ${it.name}")
-        else
-            println("Error deleting file")
+        if (delFileFromDir(file, it)) {
+            println("Deleted ${file.name} in ${it.name}")
+            filesDeleted++
+        } else
+            println("Error deleting ${file.name} in ${it.name}")
     }
+
+    println("Files deleted = $filesDeleted")
 }
 
 /**
