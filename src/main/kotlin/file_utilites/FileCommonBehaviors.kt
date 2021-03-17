@@ -18,14 +18,14 @@ import java.io.File
  * a 1 if the action was successful, or a 0 if unsuccessful.
  * @throws IllegalArgumentException If [dir] is not a directory, or if it doesn't exist.
  */
-fun actOnAllFilesInDir(dir: File, act: (File) -> Int) {
+fun actOnAllFilesInDir(dir: File, act: (File) -> FileOperation) {
     if (!dir.exists() || !dir.isDirectory)
         throw IllegalArgumentException("Invalid argument. $dir must be a directory and exists.")
 
     var filesAltered = 0
 
     dir.listFiles().forEach { child: File ->
-        filesAltered += act(child)
+        filesAltered += act(child).toInt()
     }
 
     println("Files altered: $filesAltered")

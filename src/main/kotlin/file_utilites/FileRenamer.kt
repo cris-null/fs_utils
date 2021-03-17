@@ -12,13 +12,13 @@ fun simplifyAllFilenames(dir: File) {
     actOnAllFilesInDir(dir) { child: File ->
         val newName = getSimplifiedFilename(child.name)
         if (child.name == newName) {
-            return@actOnAllFilesInDir FileOperation.FAILURE.toInt()
+            return@actOnAllFilesInDir FileOperation.FAILURE
         } else if (rename(child, newName)) {
             println("Renamed: ${child.name} -> $newName")
-            return@actOnAllFilesInDir  FileOperation.SUCCESS.toInt()
+            return@actOnAllFilesInDir  FileOperation.SUCCESS
         } else {
             println("Failed to rename ${child.name}")
-            return@actOnAllFilesInDir  FileOperation.FAILURE.toInt()
+            return@actOnAllFilesInDir  FileOperation.FAILURE
         }
     }
 }
@@ -27,10 +27,10 @@ fun addPrefixToAllFilenamesInDir(dir: File, prefix: String) {
     actOnAllFilesInDir(dir) { child: File ->
         if (prefixStringToFilename(child, prefix)) {
             println("Renamed: ${child.name} -> ${getSimplifiedFilename(prefix)}${child.name}")
-            return@actOnAllFilesInDir FileOperation.SUCCESS.toInt()
+            return@actOnAllFilesInDir FileOperation.SUCCESS
         } else {
             println("Could not rename ${child.name}")
-            return@actOnAllFilesInDir FileOperation.FAILURE.toInt()
+            return@actOnAllFilesInDir FileOperation.FAILURE
         }
     }
 }
@@ -41,10 +41,10 @@ fun removePrefixFromAllFilesInDir(dir: File, prefix: String) {
             val newName = child.name.removePrefix(prefix)
             rename(child, newName)
             println("Renamed: ${child.name} -> $newName")
-            return@actOnAllFilesInDir FileOperation.SUCCESS.toInt()
+            return@actOnAllFilesInDir FileOperation.SUCCESS
         } else {
             println("${child.name} does not start with prefix $prefix")
-            return@actOnAllFilesInDir FileOperation.FAILURE.toInt()
+            return@actOnAllFilesInDir FileOperation.FAILURE
         }
     }
 }
@@ -62,10 +62,10 @@ fun removeCharFromAllFilesInDir(dir: File, char: String) {
             val newName = child.name.replace(char, "")
             rename(child, newName)
             println("Renamed: ${child.name} -> $newName")
-            return@actOnAllFilesInDir FileOperation.SUCCESS.toInt()
+            return@actOnAllFilesInDir FileOperation.SUCCESS
         } else {
             println("${child.name} does not contain $char")
-            return@actOnAllFilesInDir FileOperation.FAILURE.toInt()
+            return@actOnAllFilesInDir FileOperation.FAILURE
         }
     }
 }
