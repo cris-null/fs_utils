@@ -59,10 +59,16 @@ fun printAdjacentDirs(file: File) {
 
 fun isFileInAllAdjacentDirs(file: File): Boolean {
     var copiesFound = 0
-    val adjacentDirs = getAdjacentDirs(file)
-    adjacentDirs.forEach { if (isFileInDir(file, it)) copiesFound++ }
+    val dirsInspected = actOnAdjacentDirs(file) { adjacentDir: File ->
+        if (isFileInDir(file, adjacentDir)) copiesFound++
+        // Always return success because we want to count how many directories
+        // were inspected in total.
+        return@actOnAdjacentDirs FileOperation.SUCCESS
+    }
 
-    return copiesFound == adjacentDirs.size
+    val isFileInAllAdjacentDirs = copiesFound == dirsInspected
+    println(isFileInAllAdjacentDirs)
+    return isFileInAllAdjacentDirs
 }
 
 /**

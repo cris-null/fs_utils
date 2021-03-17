@@ -19,7 +19,7 @@ fun parse(args: Array<String>) {
     else if (chosenCommand == commands[3] && args.size == 2)
         copyFileToAllAdjacentDirs(File(args[1]))
     else if (chosenCommand == commands[4] && args.size == 2)
-        println(isFileInAllAdjacentDirs(File(args[1])))
+        isFileInAllAdjacentDirs(File(args[1]))
     else if (chosenCommand == commands[5] && args.size == 2)
         delFromAdjacentDirs(File(args[1]))
     else if (chosenCommand == commands[6] && args.size == 2)
