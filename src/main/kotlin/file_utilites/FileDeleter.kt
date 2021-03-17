@@ -6,13 +6,13 @@ import java.io.File
  * Checks adjacent directories to see if they contain a file with the same name as [file]. If so, it is deleted.
  */
 fun delFromAdjacentDirs(file: File) {
-    var filesDeleted = actOnAdjacentDirs(file) { adjacentDir: File ->
+    val filesDeleted = actOnAdjacentDirs(file) { adjacentDir: File ->
         if (delFileMatchFromDir(file, adjacentDir)) {
             println("Deleted ${file.name} in ${adjacentDir.name}")
-            return@actOnAdjacentDirs FileOperation.SUCCESS
+            return@actOnAdjacentDirs FileOperationResult.SUCCESS
         }
         else
-            return@actOnAdjacentDirs FileOperation.NO_CHANGE
+            return@actOnAdjacentDirs FileOperationResult.UNCHANGED
     }
 
     println("Files deleted: $filesDeleted")

@@ -15,7 +15,7 @@ import java.io.File
  * @return The total number of files altered.
  * @throws IllegalArgumentException If [dir] is not a directory, or if it doesn't exist.
  */
-fun actOnAllFilesInDir(dir: File, act: (File) -> FileOperation): Int {
+fun actOnAllFilesInDir(dir: File, act: (File) -> FileOperationResult): Int {
     if (!dir.exists() || !dir.isDirectory)
         throw IllegalArgumentException("Invalid argument. $dir must be a directory and exists.")
 
@@ -35,7 +35,7 @@ fun actOnAllFilesInDir(dir: File, act: (File) -> FileOperation): Int {
  * @return The total number of files altered.
  * @throws IllegalArgumentException if [file] does not exist, or if it's a directory.
  */
-fun actOnAdjacentDirs(file: File, act: (adjacentDir: File) -> FileOperation): Int {
+fun actOnAdjacentDirs(file: File, act: (adjacentDir: File) -> FileOperationResult): Int {
     if (!file.exists() || file.isDirectory)
         throw IllegalArgumentException("Invalid argument. $file must exist, and it can't be a directory.")
 

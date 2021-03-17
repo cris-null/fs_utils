@@ -21,7 +21,7 @@ fun copyFileToDir(file: File, dir: File) {
 fun copyFileToAllAdjacentDirs(file: File) {
     val copiesMade = actOnAdjacentDirs(file) { adjacentDir: File ->
         copyFileToDir(file, adjacentDir)
-        return@actOnAdjacentDirs FileOperation.SUCCESS
+        return@actOnAdjacentDirs FileOperationResult.SUCCESS
     }
 
     println("Copies made: $copiesMade")

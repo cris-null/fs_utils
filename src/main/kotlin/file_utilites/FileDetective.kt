@@ -54,7 +54,7 @@ fun getAdjacentDirs(file: File): Array<File> {
 fun printAdjacentDirs(file: File) {
     val totalDirectories = actOnAdjacentDirs(file) { adjacentDir: File ->
         println(adjacentDir.name)
-        return@actOnAdjacentDirs FileOperation.SUCCESS
+        return@actOnAdjacentDirs FileOperationResult.SUCCESS
     }
 
     println("Total directories: $totalDirectories")
@@ -66,7 +66,7 @@ fun isFileInAllAdjacentDirs(file: File): Boolean {
         if (isFileInDir(file, adjacentDir)) copiesFound++
         // Always return success because we want to count how many directories
         // were inspected in total.
-        return@actOnAdjacentDirs FileOperation.SUCCESS
+        return@actOnAdjacentDirs FileOperationResult.SUCCESS
     }
 
     val isFileInAllAdjacentDirs = copiesFound == dirsInspected
@@ -83,7 +83,7 @@ fun isFileInDir(file: File, dir: File): Boolean {
     var foundFile = false
     actOnAllFilesInDir(dir) { fileInDir ->
         if (fileInDir.name == file.name) foundFile = true
-        return@actOnAllFilesInDir FileOperation.NO_CHANGE
+        return@actOnAllFilesInDir FileOperationResult.UNCHANGED
     }
 
     return foundFile
@@ -91,7 +91,6 @@ fun isFileInDir(file: File, dir: File): Boolean {
 
 /**
  * Searches a directory for a [File] with the same name as [file], and returns it.
- *
  * @return The matching [File] if found, else null.
  */
 fun getFileMatchFromDir(file: File, dir: File): File? {
@@ -100,7 +99,7 @@ fun getFileMatchFromDir(file: File, dir: File): File? {
         if (file.name == fileInDir.name)
             result = fileInDir
 
-        return@actOnAllFilesInDir FileOperation.NO_CHANGE
+        return@actOnAllFilesInDir FileOperationResult.UNCHANGED
     }
 
     return result
