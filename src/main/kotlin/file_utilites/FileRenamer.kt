@@ -52,6 +52,8 @@ fun removePrefixFromAllFilesInDir(dir: File, prefix: String) {
             filesRenamed++
         }
     }
+
+    println("Files renamed = $filesRenamed")
 }
 
 /**
