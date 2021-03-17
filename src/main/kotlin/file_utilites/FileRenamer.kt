@@ -23,6 +23,30 @@ fun simplifyAllFilenames(dir: File) {
 }
 
 /**
+ * @throws IllegalArgumentException If [dir] is not a directory, or if it doesn't exist.
+ */
+fun prefixStringToAllFilesInDir(dir: File, string: String) {
+    if (!dir.exists() || !dir.isDirectory) throw IllegalArgumentException("Invalid argument. Must exist, must be a directory.")
+
+    var filesRenamed = 0
+    dir.listFiles().forEach {
+        if (prefixStringToFilename(it, string)) {
+            println("Renamed: ${it.name} -> ${getSimplifiedFilename(string)}${it.name}")
+            filesRenamed++
+        } else
+            println("Could not rename ${it.name}")
+    }
+}
+
+/**
+ * Prefixes the simplified version of [string] to a filename, be it a directory or file.
+ */
+private fun prefixStringToFilename(file: File, string: String): Boolean {
+    val newFilename = "${getSimplifiedFilename(string)}${file.name}"
+    return rename(file, newFilename)
+}
+
+/**
  * @return True if the file was renamed, false otherwise.
  */
 private fun rename(file: File, newName: String): Boolean {
