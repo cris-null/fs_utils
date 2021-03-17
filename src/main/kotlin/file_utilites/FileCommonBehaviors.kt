@@ -19,7 +19,9 @@ fun actOnAllFilesInDir(dir: File, act: (File) -> Int) {
 
     var filesAltered = 0
 
-    dir.listFiles().forEach { filesAltered += act(it) }
+    dir.listFiles().forEach { child: File ->
+        filesAltered += act(child)
+    }
 
     println("Files altered: $filesAltered")
 }

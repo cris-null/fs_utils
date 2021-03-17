@@ -25,7 +25,7 @@ fun parse(args: Array<String>) {
     else if (chosenCommand == commands[6] && args.size == 2)
         simplifyAllFilenames(File(args[1]))
     else if (chosenCommand == commands[7] && args.size == 3)
-        prefixStringToAllFilesInDir(File(args[1]), args[2])
+        addPrefixToAllFilenamesInDir(File(args[1]), args[2])
     else if (chosenCommand == commands[8] && args.size == 3)
         removePrefixFromAllFilesInDir(File(args[1]), args[2])
     else if (chosenCommand == commands[9] && args.size == 3 && args[2].length == 1)

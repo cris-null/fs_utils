@@ -25,17 +25,27 @@ fun simplifyAllFilenames(dir: File) {
 /**
  * @throws IllegalArgumentException If [dir] is not a directory, or if it doesn't exist.
  */
-fun prefixStringToAllFilesInDir(dir: File, string: String) {
-    if (!dir.exists() || !dir.isDirectory) throw IllegalArgumentException("Invalid argument. Must exist, must be a directory.")
-
-    var filesRenamed = 0
-    dir.listFiles().forEach {
-        if (prefixStringToFilename(it, string)) {
-            println("Renamed: ${it.name} -> ${getSimplifiedFilename(string)}${it.name}")
-            filesRenamed++
-        } else
-            println("Could not rename ${it.name}")
+fun addPrefixToAllFilenamesInDir(dir: File, prefix: String) {
+    actOnAllFilesInDir(dir) { child ->
+        if (prefixStringToFilename(child, prefix)) {
+            println("Renamed: ${child.name} -> ${getSimplifiedFilename(prefix)}${child.name}")
+            return@actOnAllFilesInDir 1
+        } else {
+            println("Could not rename ${child.name}")
+            return@actOnAllFilesInDir 0
+        }
     }
+
+//    if (!dir.exists() || !dir.isDirectory) throw IllegalArgumentException("Invalid argument. Must exist, must be a directory.")
+//
+//    var filesRenamed = 0
+//    dir.listFiles().forEach {
+//        if (prefixStringToFilename(it, string)) {
+//            println("Renamed: ${it.name} -> ${getSimplifiedFilename(string)}${it.name}")
+//            filesRenamed++
+//        } else
+//            println("Could not rename ${it.name}")
+//    }
 }
 
 /**
