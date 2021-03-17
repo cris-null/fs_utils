@@ -22,11 +22,8 @@ fun simplifyAllFilenames(dir: File) {
     }
 }
 
-/**
- * @throws IllegalArgumentException If [dir] is not a directory, or if it doesn't exist.
- */
 fun addPrefixToAllFilenamesInDir(dir: File, prefix: String) {
-    actOnAllFilesInDir(dir) { child ->
+    actOnAllFilesInDir(dir) { child: File ->
         if (prefixStringToFilename(child, prefix)) {
             println("Renamed: ${child.name} -> ${getSimplifiedFilename(prefix)}${child.name}")
             return@actOnAllFilesInDir FileOperation.SUCCESS.toInt()
@@ -35,35 +32,20 @@ fun addPrefixToAllFilenamesInDir(dir: File, prefix: String) {
             return@actOnAllFilesInDir FileOperation.FAILURE.toInt()
         }
     }
-
-//    if (!dir.exists() || !dir.isDirectory) throw IllegalArgumentException("Invalid argument. Must exist, must be a directory.")
-//
-//    var filesRenamed = 0
-//    dir.listFiles().forEach {
-//        if (prefixStringToFilename(it, string)) {
-//            println("Renamed: ${it.name} -> ${getSimplifiedFilename(string)}${it.name}")
-//            filesRenamed++
-//        } else
-//            println("Could not rename ${it.name}")
-//    }
 }
 
-/**
- * @throws IllegalArgumentException If [dir] is not a directory, or if it doesn't exist.
- */
 fun removePrefixFromAllFilesInDir(dir: File, prefix: String) {
-    if (!dir.exists() || !dir.isDirectory) throw IllegalArgumentException("Invalid argument. Must exist, must be a directory.")
-
-    var filesRenamed = 0
-    dir.listFiles().forEach {
-        if (it.name.startsWith(prefix)) {
-            rename(it, it.name.removePrefix(prefix))
-            println("Renamed: ${it.name} -> ${it.name.removePrefix(prefix)}")
-            filesRenamed++
+    actOnAllFilesInDir(dir) { child: File ->
+        if (child.name.startsWith(prefix)) {
+            val newName = child.name.removePrefix(prefix)
+            rename(child, newName)
+            println("Renamed: ${child.name} -> $newName")
+            return@actOnAllFilesInDir FileOperation.SUCCESS.toInt()
+        } else {
+            println("Could not rename ${child.name}")
+            return@actOnAllFilesInDir FileOperation.FAILURE.toInt()
         }
     }
-
-    println("Files renamed = $filesRenamed")
 }
 
 /**
