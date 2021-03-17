@@ -9,47 +9,53 @@ import java.io.File
  * @param dir Is the directory whose children will be renamed.
  */
 fun simplifyAllFilenames(dir: File) {
-    actOnAllFilesInDir(dir) { child: File ->
-        val newName = getSimplifiedFilename(child.name)
+    val filesRenamed = actOnAllFilesInDir(dir) { fileInDir: File ->
+        val newName = getSimplifiedFilename(fileInDir.name)
         when {
-            child.name == newName ->
-                return@actOnAllFilesInDir FileOperationResult.UNCHANGED
-            rename(child, newName) -> {
-                println("Renamed: ${child.name} -> $newName")
+            fileInDir.name == newName ->
+                return@actOnAllFilesInDir FileOperationResult.NO_CHANGE
+            rename(fileInDir, newName) -> {
+                println("Renamed: ${fileInDir.name} -> $newName")
                 return@actOnAllFilesInDir FileOperationResult.SUCCESS
             }
             else -> {
-                println("Failed to rename ${child.name}")
-                return@actOnAllFilesInDir FileOperationResult.UNCHANGED
+                println("Failed to rename ${fileInDir.name}")
+                return@actOnAllFilesInDir FileOperationResult.NO_CHANGE
             }
         }
     }
+
+    println("Filenames simplified = $filesRenamed")
 }
 
 fun addPrefixToAllFilenamesInDir(dir: File, prefix: String) {
-    actOnAllFilesInDir(dir) { child: File ->
-        if (prefixStringToFilename(child, prefix)) {
-            println("Renamed: ${child.name} -> ${getSimplifiedFilename(prefix)}${child.name}")
+    val filenamesPrefixed = actOnAllFilesInDir(dir) { fileInDir: File ->
+        if (prefixStringToFilename(fileInDir, prefix)) {
+            println("Renamed: ${fileInDir.name} -> ${getSimplifiedFilename(prefix)}${fileInDir.name}")
             return@actOnAllFilesInDir FileOperationResult.SUCCESS
         } else {
-            println("Could not rename ${child.name}")
-            return@actOnAllFilesInDir FileOperationResult.UNCHANGED
+            println("Could not rename ${fileInDir.name}")
+            return@actOnAllFilesInDir FileOperationResult.NO_CHANGE
         }
     }
+
+    println("Filenames prefixed with $prefix = $filenamesPrefixed")
 }
 
 fun removePrefixFromAllFilesInDir(dir: File, prefix: String) {
-    actOnAllFilesInDir(dir) { child: File ->
-        if (child.name.startsWith(prefix)) {
-            val newName = child.name.removePrefix(prefix)
-            rename(child, newName)
-            println("Renamed: ${child.name} -> $newName")
+    val prefixesRemoved = actOnAllFilesInDir(dir) { fileInDir: File ->
+        if (fileInDir.name.startsWith(prefix)) {
+            val newName = fileInDir.name.removePrefix(prefix)
+            rename(fileInDir, newName)
+            println("Renamed: ${fileInDir.name} -> $newName")
             return@actOnAllFilesInDir FileOperationResult.SUCCESS
         } else {
-            println("${child.name} does not start with prefix $prefix")
-            return@actOnAllFilesInDir FileOperationResult.UNCHANGED
+            println("${fileInDir.name} does not start with prefix $prefix")
+            return@actOnAllFilesInDir FileOperationResult.NO_CHANGE
         }
     }
+
+    println("Prefixes removed = $prefixesRemoved")
 }
 
 /**
@@ -60,7 +66,7 @@ fun removePrefixFromAllFilesInDir(dir: File, prefix: String) {
 fun removeCharFromAllFilesInDir(dir: File, char: String) {
     if (char.length != 1) throw IllegalArgumentException("$char is of length != 1")
 
-    actOnAllFilesInDir(dir) { child: File ->
+    val filenamesChanged = actOnAllFilesInDir(dir) { child: File ->
         if (child.name.contains(char)) {
             val newName = child.name.replace(char, "")
             rename(child, newName)
@@ -68,9 +74,11 @@ fun removeCharFromAllFilesInDir(dir: File, char: String) {
             return@actOnAllFilesInDir FileOperationResult.SUCCESS
         } else {
             println("${child.name} does not contain $char")
-            return@actOnAllFilesInDir FileOperationResult.UNCHANGED
+            return@actOnAllFilesInDir FileOperationResult.NO_CHANGE
         }
     }
+
+    println("Filenames changed = $filenamesChanged")
 }
 
 /**

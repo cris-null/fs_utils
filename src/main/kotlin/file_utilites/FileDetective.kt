@@ -29,28 +29,6 @@ fun printFileInfo(file: File) {
     )
 }
 
-/**
- * @return All the directories at the same level, i.e., the children of the parent
- * of [file], i.e., its siblings.
- * @throws IllegalArgumentException If [file] does not exist.
- * @throws IllegalArgumentException if [file] does not have a parent.
- */
-fun getAdjacentDirs(file: File): Array<File> {
-    if (!file.exists()) throw IllegalArgumentException("File does not exist")
-
-    val parent = file.parentFile
-    if (!parent.exists()) throw IllegalArgumentException("File does not have a parent directory")
-
-    val children = parent.listFiles()
-    val adjacentDirs = mutableListOf<File>()
-    children.forEach {
-        if (it.isDirectory && it.name != file.name)
-            adjacentDirs.add(it)
-    }
-
-    return adjacentDirs.toTypedArray()
-}
-
 fun printAdjacentDirs(file: File) {
     val totalDirectories = actOnAdjacentDirs(file) { adjacentDir: File ->
         println(adjacentDir.name)
@@ -63,14 +41,13 @@ fun printAdjacentDirs(file: File) {
 fun isFileInAllAdjacentDirs(file: File): Boolean {
     var copiesFound = 0
     val dirsInspected = actOnAdjacentDirs(file) { adjacentDir: File ->
-        if (isFileInDir(file, adjacentDir)) copiesFound++
-        // Always return success because we want to count how many directories
-        // were inspected in total.
+        if (isFileInDir(file, adjacentDir))
+            copiesFound++
         return@actOnAdjacentDirs FileOperationResult.SUCCESS
     }
 
-    val isFileInAllAdjacentDirs = copiesFound == dirsInspected
-    println(isFileInAllAdjacentDirs)
+    val isFileInAllAdjacentDirs = (copiesFound == dirsInspected)
+    println("File is in all adjacent directories = $isFileInAllAdjacentDirs")
     return isFileInAllAdjacentDirs
 }
 
@@ -83,7 +60,7 @@ fun isFileInDir(file: File, dir: File): Boolean {
     var foundFile = false
     actOnAllFilesInDir(dir) { fileInDir ->
         if (fileInDir.name == file.name) foundFile = true
-        return@actOnAllFilesInDir FileOperationResult.UNCHANGED
+        return@actOnAllFilesInDir FileOperationResult.NO_CHANGE
     }
 
     return foundFile
@@ -98,8 +75,7 @@ fun getFileMatchFromDir(file: File, dir: File): File? {
     actOnAllFilesInDir(dir) { fileInDir ->
         if (file.name == fileInDir.name)
             result = fileInDir
-
-        return@actOnAllFilesInDir FileOperationResult.UNCHANGED
+        return@actOnAllFilesInDir FileOperationResult.NO_CHANGE
     }
 
     return result
