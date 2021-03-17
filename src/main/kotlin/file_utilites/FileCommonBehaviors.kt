@@ -41,9 +41,9 @@ fun actOnAdjacentDirs(file: File, act: (adjacentDir: File) -> FileOperation): In
 
     var filesAltered = 0
 
-    val siblings = file.parentFile.listFiles()
-    siblings.forEach {
-        if (it.isDirectory) filesAltered += act(it).toInt()
+    val siblingDirectories = file.parentFile.listFiles().filter { it.name != file.name && it.isDirectory }
+    siblingDirectories.forEach {
+        filesAltered += act(it).toInt()
     }
 
     return filesAltered

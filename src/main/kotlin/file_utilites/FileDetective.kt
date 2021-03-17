@@ -52,9 +52,12 @@ fun getAdjacentDirs(file: File): Array<File> {
 }
 
 fun printAdjacentDirs(file: File) {
-    val adjacentDirs = getAdjacentDirs(file)
-    println("Total adjacent dirs = ${adjacentDirs.size}")
-    adjacentDirs.forEach { println(it.name) }
+    val totalDirectories = actOnAdjacentDirs(file) { adjacentDir: File ->
+        println(adjacentDir.name)
+        return@actOnAdjacentDirs FileOperation.SUCCESS
+    }
+
+    println("Total directories: $totalDirectories")
 }
 
 fun isFileInAllAdjacentDirs(file: File): Boolean {
@@ -92,11 +95,13 @@ fun isFileInDir(file: File, dir: File): Boolean {
  * @return The matching [File] if found, else null.
  */
 fun getFileMatchFromDir(file: File, dir: File): File? {
-    if (!file.exists() || file.isDirectory) throw IllegalArgumentException("File does not exist, or it's a directory")
-    if (!dir.exists() || !dir.isDirectory) throw IllegalArgumentException("Dir does not exist, or it's not a directory")
+    var result: File? = null
+    actOnAllFilesInDir(dir) { fileInDir ->
+        if (file.name == fileInDir.name)
+            result = fileInDir
 
-    val children = dir.listFiles()
-    children.forEach { if (it.name == file.name) return it }
+        return@actOnAllFilesInDir FileOperation.NO_CHANGE
+    }
 
-    return null
+    return result
 }

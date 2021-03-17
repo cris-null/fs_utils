@@ -5,7 +5,7 @@ fun parse(args: Array<String>) {
     if (args.isEmpty()) return
 
     val commands = arrayOf(
-        "info", "copy", "print-adj-dirs", "mass-copy", "verify", "adj-all-file-del",
+        "info", "copy", "print-adj-dirs", "mass-copy", "verify", "mass-del",
         "simplify", "prefix", "remove-prefix", "remove-char"
     )
 
