@@ -29,10 +29,10 @@ fun addPrefixToAllFilenamesInDir(dir: File, prefix: String) {
     actOnAllFilesInDir(dir) { child ->
         if (prefixStringToFilename(child, prefix)) {
             println("Renamed: ${child.name} -> ${getSimplifiedFilename(prefix)}${child.name}")
-            return@actOnAllFilesInDir 1
+            return@actOnAllFilesInDir FileOperation.SUCCESS.toInt()
         } else {
             println("Could not rename ${child.name}")
-            return@actOnAllFilesInDir 0
+            return@actOnAllFilesInDir FileOperation.FAILURE.toInt()
         }
     }
 
