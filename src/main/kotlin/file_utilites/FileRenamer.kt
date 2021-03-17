@@ -11,14 +11,17 @@ import java.io.File
 fun simplifyAllFilenames(dir: File) {
     actOnAllFilesInDir(dir) { child: File ->
         val newName = getSimplifiedFilename(child.name)
-        if (child.name == newName) {
-            return@actOnAllFilesInDir FileOperation.FAILURE
-        } else if (rename(child, newName)) {
-            println("Renamed: ${child.name} -> $newName")
-            return@actOnAllFilesInDir  FileOperation.SUCCESS
-        } else {
-            println("Failed to rename ${child.name}")
-            return@actOnAllFilesInDir  FileOperation.FAILURE
+        when {
+            child.name == newName ->
+                return@actOnAllFilesInDir FileOperation.FAILURE
+            rename(child, newName) -> {
+                println("Renamed: ${child.name} -> $newName")
+                return@actOnAllFilesInDir FileOperation.SUCCESS
+            }
+            else -> {
+                println("Failed to rename ${child.name}")
+                return@actOnAllFilesInDir FileOperation.FAILURE
+            }
         }
     }
 }

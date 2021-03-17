@@ -67,16 +67,17 @@ fun isFileInAllAdjacentDirs(file: File): Boolean {
 
 /**
  * @throws IllegalArgumentException If [file] does not exist, or if it's a directory.
- * @throws IllegalArgumentException if [dir] does not exist, or if it's not a directory.
  */
 fun isFileInDir(file: File, dir: File): Boolean {
-    if (!file.exists() || file.isDirectory) throw IllegalArgumentException("File does not exist, or it's a directory")
-    if (!dir.exists() || !dir.isDirectory) throw IllegalArgumentException("Dir does not exist, or it's not a directory")
+    if (!file.exists() || file.isDirectory) throw IllegalArgumentException("$file does not exist, or it's a directory")
 
-    val children = dir.listFiles()
-    children.forEach { if (it.name == file.name) return true }
+    var foundFile = false
+    actOnAllFilesInDir(dir) { fileInDir ->
+        if (fileInDir.name == file.name) foundFile = true
+        return@actOnAllFilesInDir FileOperation.NO_CHANGE
+    }
 
-    return false
+    return foundFile
 }
 
 /**

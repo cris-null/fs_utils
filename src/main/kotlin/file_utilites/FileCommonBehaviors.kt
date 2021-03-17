@@ -28,5 +28,25 @@ fun actOnAllFilesInDir(dir: File, act: (File) -> FileOperation) {
         filesAltered += act(child).toInt()
     }
 
-    println("Files altered: $filesAltered")
+    if (filesAltered != 0) println("Files altered: $filesAltered")
+}
+
+/**
+ * Non-directory [File] objects will be ignored. Only acts on adjacent directories.
+ *
+ * @param file Is the file whose adjacent directories will be acted upon. Must not be a directory.
+ * @throws IllegalArgumentException if [file] does not exist, or if it's a directory.
+ */
+fun actOnAdjacentDirs(file: File, act: (adjacentDir: File) -> FileOperation) {
+    if (!file.exists() || file.isDirectory)
+        throw IllegalArgumentException("Invalid argument. $file must exist, and it can't be a directory.")
+
+    var filesAltered = 0
+
+    val siblings = file.parentFile.listFiles()
+    siblings.forEach {
+        if (it.isDirectory) filesAltered += act(it).toInt()
+    }
+
+    if (filesAltered != 0) println("Files altered: $filesAltered")
 }
