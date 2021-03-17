@@ -3,6 +3,11 @@ package file_utilites
 import java.io.File
 
 /**
+ * Behaviors common among many [File] operations, such as acting on all files
+ * inside directory X, should be abstracted out into their own function for re-usability.
+ */
+
+/**
  * Performs some action on all children of a given directory. The children can be
  * both files or directories.
  *

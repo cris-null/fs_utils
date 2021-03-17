@@ -7,18 +7,19 @@ import java.io.File
  * and have underscores for spaces.
  *
  * @param dir Is the directory whose children will be renamed.
- * @throws IllegalArgumentException If [dir] is not a directory, or if it doesn't exist.
  */
 fun simplifyAllFilenames(dir: File) {
-    if (!dir.exists() || !dir.isDirectory) throw IllegalArgumentException("Invalid argument. Must exist, must be a directory.")
-
-    val children = dir.listFiles()
-    children.forEach {
-        val newName = getSimplifiedFilename(it.name)
-        if (rename(it, newName)) {
-            println("Renamed: ${it.name} -> $newName")
-        } else
-            println("Could not rename $it")
+    actOnAllFilesInDir(dir) { child: File ->
+        val newName = getSimplifiedFilename(child.name)
+        if (child.name == newName) {
+            return@actOnAllFilesInDir FileOperation.FAILURE.toInt()
+        } else if (rename(child, newName)) {
+            println("Renamed: ${child.name} -> $newName")
+            return@actOnAllFilesInDir  FileOperation.SUCCESS.toInt()
+        } else {
+            println("Failed to rename ${child.name}")
+            return@actOnAllFilesInDir  FileOperation.FAILURE.toInt()
+        }
     }
 }
 
@@ -42,28 +43,31 @@ fun removePrefixFromAllFilesInDir(dir: File, prefix: String) {
             println("Renamed: ${child.name} -> $newName")
             return@actOnAllFilesInDir FileOperation.SUCCESS.toInt()
         } else {
-            println("Could not rename ${child.name}")
+            println("${child.name} does not start with prefix $prefix")
             return@actOnAllFilesInDir FileOperation.FAILURE.toInt()
         }
     }
 }
 
 /**
- * @throws IllegalArgumentException If [dir] is not a directory, or if it doesn't exist.
+ * Removes all occurrences of [char] in every filename of every file in [dir].
+ *
+ * @throws IllegalArgumentException if [char] has more than 1 character
  */
 fun removeCharFromAllFilesInDir(dir: File, char: String) {
-    if (!dir.exists() || !dir.isDirectory) throw IllegalArgumentException("Invalid argument. Must exist, must be a directory.")
+    if (char.length != 1) throw IllegalArgumentException("$char is of length != 1")
 
-    var filesRenamed = 0
-    dir.listFiles().forEach {
-        if (it.name.contains(char)) {
-            rename(it, it.name.replace(char, ""))
-            println("Renamed: ${it.name} -> ${it.name.replace(char, "")}")
-            filesRenamed++
+    actOnAllFilesInDir(dir) { child: File ->
+        if (child.name.contains(char)) {
+            val newName = child.name.replace(char, "")
+            rename(child, newName)
+            println("Renamed: ${child.name} -> $newName")
+            return@actOnAllFilesInDir FileOperation.SUCCESS.toInt()
+        } else {
+            println("${child.name} does not contain $char")
+            return@actOnAllFilesInDir FileOperation.FAILURE.toInt()
         }
     }
-
-    println("Files renamed = $filesRenamed")
 }
 
 /**
@@ -78,10 +82,10 @@ private fun prefixStringToFilename(file: File, string: String): Boolean {
  * @return True if the file was renamed, false otherwise.
  */
 private fun rename(file: File, newName: String): Boolean {
-    val destPath = file.parentFile.path + "/$newName"
-    val dest = File(destPath)
+    val destinationPath = file.parentFile.path + "/$newName"
+    val destination = File(destinationPath)
 
-    return file.renameTo(dest)
+    return file.renameTo(destination)
 }
 
 private fun getSimplifiedFilename(filename: String): String {
