@@ -5,8 +5,8 @@ fun parse(args: Array<String>) {
     if (args.isEmpty()) return
 
     val commands = arrayOf(
-        "info", "copy", "print-adj-dirs", "mass-copy", "verify", "adj-all-file-del",
-        "simplify-all", "prefix", "remove-prefix", "remove-char"
+        "info", "copy", "print-adj-dirs", "mass-copy", "verify", "mass-del",
+        "simplify", "prefix", "remove-prefix", "remove-char"
     )
 
     val chosenCommand = args[0]
@@ -19,15 +19,15 @@ fun parse(args: Array<String>) {
     else if (chosenCommand == commands[3] && args.size == 2)
         copyFileToAllAdjacentDirs(File(args[1]))
     else if (chosenCommand == commands[4] && args.size == 2)
-        println(isFileInAllAdjacentDirs(File(args[1])))
+        isFileInAllAdjacentDirs(File(args[1]))
     else if (chosenCommand == commands[5] && args.size == 2)
         delFromAdjacentDirs(File(args[1]))
     else if (chosenCommand == commands[6] && args.size == 2)
         simplifyAllFilenames(File(args[1]))
     else if (chosenCommand == commands[7] && args.size == 3)
-        prefixStringToAllFilesInDir(File(args[1]), args[2])
+        addPrefixToAllFilenamesInDir(File(args[1]), args[2])
     else if (chosenCommand == commands[8] && args.size == 3)
         removePrefixFromAllFilesInDir(File(args[1]), args[2])
-    else if (chosenCommand == commands[9] && args.size == 3 && args[2].length == 1)
+    else if (chosenCommand == commands[9] && args.size == 3)
         removeCharFromAllFilesInDir(File(args[1]), args[2])
 }

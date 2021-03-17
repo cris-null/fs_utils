@@ -9,15 +9,20 @@ import java.io.File
  */
 fun copyFileToDir(file: File, dir: File) {
     if (!file.exists() || !dir.exists()) throw IllegalArgumentException("Argument does not exist")
-    if (file.isDirectory || !dir.isDirectory) throw IllegalArgumentException("Arguments must be a File and a Directory")
+    if (file.isDirectory || !dir.isDirectory) throw IllegalArgumentException("Not given a File and a Directory")
 
     val filename = file.name
-    val destPath = dir.path + "/$filename"
-    val dest = File(destPath)
+    val destinationPath = dir.path + "/$filename"
+    val destination = File(destinationPath)
 
-    file.copyTo(dest)
+    file.copyTo(destination)
 }
 
 fun copyFileToAllAdjacentDirs(file: File) {
-    getAdjacentDirs(file).forEach { copyFileToDir(file, it) }
+    val copiesMade = actOnAdjacentDirs(file) { adjacentDir: File ->
+        copyFileToDir(file, adjacentDir)
+        return@actOnAdjacentDirs FileOperationResult.SUCCESS
+    }
+
+    println("Copies made: $copiesMade")
 }
