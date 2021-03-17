@@ -57,6 +57,24 @@ fun removePrefixFromAllFilesInDir(dir: File, prefix: String) {
 }
 
 /**
+ * @throws IllegalArgumentException If [dir] is not a directory, or if it doesn't exist.
+ */
+fun removeCharFromAllFilesInDir(dir: File, char: String) {
+    if (!dir.exists() || !dir.isDirectory) throw IllegalArgumentException("Invalid argument. Must exist, must be a directory.")
+
+    var filesRenamed = 0
+    dir.listFiles().forEach {
+        if (it.name.contains(char)) {
+            rename(it, it.name.replace(char, ""))
+            println("Renamed: ${it.name} -> ${it.name.replace(char, "")}")
+            filesRenamed++
+        }
+    }
+
+    println("Files renamed = $filesRenamed")
+}
+
+/**
  * Prefixes the simplified version of [string] to a filename, be it a directory or file.
  */
 private fun prefixStringToFilename(file: File, string: String): Boolean {
