@@ -6,7 +6,7 @@ fun parse(args: Array<String>) {
 
     val commands = arrayOf(
         "info", "copy", "print-adj-dirs", "mass-copy", "verify", "adj-all-file-del",
-        "simplify-all"
+        "simplify-all", "prefix"
     )
 
     val chosenCommand = args[0]
@@ -24,4 +24,6 @@ fun parse(args: Array<String>) {
         delFromAdjacentDirs(File(args[1]))
     else if (chosenCommand == commands[6] && args.size == 2)
         simplifyAllFilenames(File(args[1]))
+    else if (chosenCommand == commands[7] && args.size == 3)
+        prefixStringToAllFilesInDir(File(args[1]), args[2])
 }
